@@ -1,0 +1,3 @@
+
+class NotSupportedURL(Exception):
+    pass

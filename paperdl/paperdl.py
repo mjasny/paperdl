@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 
-import re
 import argparse
 import itertools
 import sys
 
 from .ssh_proxy import SSHProxy
 from .downloader import Downloader
-from .utils import AttrDict
+from .sites import SITES
+from .exceptions import NotSupportedURL
 
 
 
@@ -24,40 +24,7 @@ ASCII_LOGO = """\
 """
 
 
-class NotSupportedURL(Exception):
-    pass
 
-class IEEEURLGenerator:
-    @staticmethod
-    def extract(url):
-        m = re.match(
-            r'https:\/\/ieeexplore\.ieee\.org\/document\/(\d+)', url)
-        if not m:
-            raise NotSupportedURL()
-        pdf_url = f'https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?tp=&isnumber=&arnumber={m.group(1)}'
-        return AttrDict(url=pdf_url)
-
-class ACMURLGenerator:
-    @staticmethod
-    def extract(url):
-        m = re.match(
-            r'https:\/\/dl\.acm\.org\/doi\/abs\/(10\.\d{4,9}\/[-._;()\/:A-Z0-9]+)', url)
-        if not m:
-            raise NotSupportedURL()
-        pdf_url = f'https://dl.acm.org/doi/pdf/{m.group(1)}'
-        return AttrDict(url=pdf_url)
-
-class NEJMURLGenerator:
-    @staticmethod
-    def extract(url):
-        m = re.match(
-            r'https:\/\/www\.nejm\.org\/doi\/full/10.1056/([A-z0-9]+)', url)
-        if not m:
-            raise NotSupportedURL()
-        
-        fname = f'{m.group(1)}.pdf'
-        pdf_url = f'https://mediacenteratypon.nejmgroup-production.org/{fname}'
-        return AttrDict(url=pdf_url, fname=fname)
 
 
 
@@ -97,12 +64,11 @@ def main():
         dl.set_proxy(ssh_proxy)
         
 
-    generators = [IEEEURLGenerator, ACMURLGenerator, NEJMURLGenerator]
     
     for url in urls:
-        for generator in generators:
+        for site in SITES:
             try:
-                pdf_info = generator.extract(url)
+                pdf_info = site.extract(url)
                 print(f'Extracted URL: {pdf_info.url}')
                 fname = dl.get(**pdf_info, save=True)
                 print(f'Downloaded to: {fname}')
