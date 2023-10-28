@@ -1,6 +1,7 @@
 import re
 from ..utils import AttrDict
 from ..exceptions import NotSupportedURL
+from ..downloaders import RequestsDownloader
 
 class NEJMURLGenerator:
     @staticmethod
@@ -13,3 +14,8 @@ class NEJMURLGenerator:
         fname = f'{m.group(1)}.pdf'
         pdf_url = f'https://mediacenteratypon.nejmgroup-production.org/{fname}'
         return AttrDict(url=pdf_url, fname=fname)
+
+
+    @staticmethod
+    def get_dl():
+        return RequestsDownloader()

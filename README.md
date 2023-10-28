@@ -24,6 +24,19 @@ options:
 
 
 
+## Supported Sites
+
+|  Journal  |  ProxyRequired  |
+|---|:---:|
+|  ACM  | yes |
+|  IEEE  | yes |
+|  NEJM  | no  |
+|  SagePub  | yes  |
+
+
+
+
+
 ## Installation
 
 To install on your system, clone this repository and execute:

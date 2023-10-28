@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 
-from distutils.core import setup
-
+from setuptools import setup
 
 setup(
     name='paperdl',
@@ -15,6 +14,7 @@ setup(
     install_requires=[
         'requests[socks]',
         'paramiko @ git+https://github.com/linwownil/paramiko.git@add-socks-proxy',
+        'playwright',
     ],
     entry_points={
         'console_scripts': [
